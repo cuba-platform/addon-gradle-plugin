@@ -1,0 +1,103 @@
+buildscript {
+    ext.cubaVersion = '7.0-SNAPSHOT'
+    repositories {
+        if (System.getenv('HAULMONT_REPOSITORY_URL')) {
+            maven {
+                credentials {
+                    username System.getenv('HAULMONT_REPOSITORY_USER')
+                    password System.getenv('HAULMONT_REPOSITORY_PASSWORD')
+                }
+                url System.getenv('HAULMONT_REPOSITORY_URL')
+            }
+        } else {
+            jcenter()
+            maven { url "https://plugins.gradle.org/m2/" }
+            maven { url "https://dl.bintray.com/cuba-platform/main" }
+        }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'maven'
+    id 'checkstyle'
+    id 'findbugs'
+}
+
+def defaultVersion = '1.0-SNAPSHOT'
+def BUILD_VERSION = 'buildVersion'
+
+def artifactVersion = rootProject.hasProperty(BUILD_VERSION) ? rootProject[BUILD_VERSION] : defaultVersion
+def isSnapshot = artifactVersion.endsWith('-SNAPSHOT')
+
+group 'com.haulmont.gradle'
+version artifactVersion
+
+ext.repositoryUrl = System.getenv('HAULMONT_REPOSITORY_URL') ?: 'https://repo.cuba-platform.com/content/groups/work'
+ext.repositoryUser = System.getenv('HAULMONT_REPOSITORY_USER') ?: 'cuba'
+ext.repositoryPassword = System.getenv('HAULMONT_REPOSITORY_PASSWORD') ?: 'cuba123'
+
+repositories {
+    mavenLocal()
+    maven {
+        credentials {
+            username repositoryUser
+            password repositoryPassword
+        }
+        url repositoryUrl
+    }
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+configurations {
+    deployerJars
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.groovy
+    from sourceSets.main.java
+    from sourceSets.main.resources
+
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourceJar
+}
+
+def uploadUrl = project.hasProperty('uploadUrl') ? project.uploadUrl : null
+def haulmontUploadRepo = System.getenv('HAULMONT_REPOSITORY_UPLOAD_URL')
+if (uploadUrl == null && haulmontUploadRepo) {
+    if (!haulmontUploadRepo.endsWith('/')) {
+        haulmontUploadRepo += '/'
+    }
+    uploadUrl = haulmontUploadRepo + "${isSnapshot ? 'snapshots' : 'releases'}"
+}
+
+def uploadUser = project.hasProperty('uploadUser') ? project.uploadUser :
+        System.getenv('HAULMONT_REPOSITORY_USER')
+def uploadPassword = project.hasProperty('uploadPassword') ? project.uploadPassword :
+        System.getenv('HAULMONT_REPOSITORY_PASSWORD')
+
+uploadArchives.configure {
+    repositories.mavenDeployer {
+        name = 'httpDeployer'
+        configuration = configurations.deployerJars
+        repository(url: uploadUrl) {
+            authentication(userName: uploadUser, password: uploadPassword)
+        }
+    }
+}
+
+
+
