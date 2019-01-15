@@ -29,7 +29,7 @@ class ExtCheckstylePlugin implements Plugin<Project> {
             Files.write(stream.getBytes(), ignoreFile)
         }
 
-        checkstyle.toolVersion = "6.2"
+        checkstyle.toolVersion = "8.16"
         checkstyle.configFile = file
         checkstyle.ignoreFailures = false
 
