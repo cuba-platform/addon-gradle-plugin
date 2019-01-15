@@ -66,6 +66,11 @@
     <!--   <property name="fileExtensions" value="java"/> -->
     <!-- </module> -->
 
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="BEGIN_IGNORE_CHECK_STYLE"/>
+        <property name="onCommentFormat" value="END_IGNORE_CHECK_STYLE"/>
+    </module>
+
     <module name="TreeWalker">
         <property name="severity" value="error"/>
 
@@ -77,14 +82,13 @@
         <!--<module name="JavadocStyle"/>-->
 
         <!--<module name="FileContentsHolder"/>-->
-        <module name="SuppressionCommentFilter">
-            <property name="offCommentFormat" value="BEGIN_IGNORE_CHECK_STYLE"/>
-            <property name="onCommentFormat" value="END_IGNORE_CHECK_STYLE"/>
-        </module>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="ConstantName"/>
+        <module name="ConstantName">
+            <property name="format"
+                      value="^log(ger)?|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
