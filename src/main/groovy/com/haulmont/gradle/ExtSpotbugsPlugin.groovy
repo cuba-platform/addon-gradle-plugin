@@ -39,18 +39,6 @@ class ExtSpotbugsPlugin implements Plugin<Project> {
             Files.write(stream.getBytes(), fancyHist)
         }
 
-        def nicerHtml = new File(spotbugsConfigDir + "/pmd-nicerhtml.xsl")
-        if (!nicerHtml.exists()) {
-            InputStream stream = getClass().getClassLoader().getResourceAsStream("codestyle/pmd-nicerhtml.xsl")
-            Files.write(stream.getBytes(), nicerHtml)
-        }
-
-        def ruleSet = new File(spotbugsConfigDir + "/pmd-ruleset.xml")
-        if (!ruleSet.exists()) {
-            InputStream stream = getClass().getClassLoader().getResourceAsStream("codestyle/pmd-ruleset.xml")
-            Files.write(stream.getBytes(), ruleSet)
-        }
-
         Task spotbugsMain = project.tasks.findByName("spotbugsMain")
 
         spotbugsMain.jvmArgs = ['-Xmx2048m']
