@@ -19,6 +19,9 @@ class AddonPlugin implements Plugin<Project> {
             if (!project.plugins.findPlugin("findbugs")) {
                 new ExtFindbugsPlugin().apply(project)
             }
+            if (!project.plugins.findPlugin("com.github.spotbugs")) {
+                new ExtSpotbugsPlugin().apply(project)
+            }
         }
 
         project.afterEvaluate { Project p ->

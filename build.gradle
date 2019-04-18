@@ -15,6 +15,9 @@ buildscript {
             maven { url "https://dl.bintray.com/cuba-platform/main" }
         }
     }
+    dependencies {
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.8"
+    }
 }
 
 plugins {
@@ -23,6 +26,7 @@ plugins {
     id 'maven'
     id 'checkstyle'
     id 'findbugs'
+    id "com.github.spotbugs" version "1.6.8"
 }
 
 def defaultVersion = '1.0-SNAPSHOT'
@@ -59,6 +63,7 @@ configurations {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    compile group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.8'
     implementation gradleApi()
     implementation localGroovy()
 }
