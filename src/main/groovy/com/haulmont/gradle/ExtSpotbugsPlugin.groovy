@@ -1,14 +1,17 @@
 package com.haulmont.gradle
 
 import com.google.common.io.Files
+import groovy.io.FileType
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 
 class ExtSpotbugsPlugin implements Plugin<Project> {
     void apply(Project p) {
-        p.apply plugin: 'com.github.spotbugs'
-        extend(p)
+        if (javaSourcesExists(p)) {
+            p.apply plugin: 'com.github.spotbugs'
+            extend(p)
+        }
     }
 
     def extend(Project project) {
@@ -59,4 +62,15 @@ class ExtSpotbugsPlugin implements Plugin<Project> {
         htmlReport.destination = new File("${project.buildDir}/reports/spotbugs/${project.name}.html")
     }
 
+    static boolean javaSourcesExists(Project project) {
+        def list = []
+
+        def dir = new File("${project.projectDir}/src")
+        dir.eachFileRecurse(FileType.FILES) { file ->
+            if (file.getName().endsWith(".java")) {
+                list << file
+            }
+        }
+        !list.isEmpty()
+    }
 }
