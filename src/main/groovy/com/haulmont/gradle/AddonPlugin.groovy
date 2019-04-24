@@ -3,6 +3,7 @@ package com.haulmont.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.javadoc.Javadoc
 
 class AddonPlugin implements Plugin<Project> {
 
@@ -58,6 +59,33 @@ class AddonPlugin implements Plugin<Project> {
                     if (!project.getTasks().findByName("killDb")) {
                         def killProcess = project.task([type: KillProcessTask], "killDb")
                         killProcess.port = hsqlPort
+                    }
+                }
+                if (!project.getTasks().findByName("javadoc")) {
+                    def javadoc = project.task("javadoc")
+                    javadoc.options.addStringOption("sourcepath", "")
+                }
+            } else {
+                if (!project.getTasks().findByName("aggregateJavadoc")) {
+                    def javadoc = project.task([type       : Javadoc,
+                                                description: 'Generate javadocs from all child projects as if it was a single project',
+                                                group      : 'Documentation'], "aggregateJavadoc")
+                    javadoc.destinationDir = new File("$project.buildDir/docs/javadoc")
+                    javadoc.title = "${project.name.toUpperCase()} API"
+
+                    def options = javadoc.options
+
+                    options.encoding = 'UTF-8'
+                    options.addStringOption("sourcepath", "")
+                    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+
+                    project.subprojects.each { proj ->
+                        def javadocTask = proj.tasks.getByPath('javadoc')
+
+                        if (javadocTask.enabled) {
+                            javadoc.source += javadocTask.source
+                            javadoc.classpath += javadocTask.classpath
+                        }
                     }
                 }
             }
