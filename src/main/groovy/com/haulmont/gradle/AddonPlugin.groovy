@@ -3,7 +3,9 @@ package com.haulmont.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.external.javadoc.JavadocMemberLevel
 
 class AddonPlugin implements Plugin<Project> {
 
@@ -70,24 +72,28 @@ class AddonPlugin implements Plugin<Project> {
                     def javadoc = project.task([type       : Javadoc,
                                                 description: 'Generate javadocs from all child projects as if it was a single project',
                                                 group      : 'Documentation'], "aggregateJavadoc")
-                    javadoc.destinationDir = new File("$project.buildDir/docs/javadoc")
-                    javadoc.title = "${project.name.toUpperCase()} API"
-
-                    def options = javadoc.options
-
-                    options.encoding = 'UTF-8'
-                    options.addStringOption("sourcepath", "")
-                    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-
-                    project.subprojects.each { proj ->
-                        def javadocTask = proj.tasks.getByPath('javadoc')
-
-                        if (javadocTask.enabled) {
-                            javadoc.source += javadocTask.source
-                            javadoc.classpath += javadocTask.classpath
-                        }
-                    }
+                    configureJavaDoc(project, javadoc)
                 }
+            }
+        }
+    }
+
+    private void configureJavaDoc(Project project, Task javadoc) {
+        javadoc.destinationDir = new File("$project.buildDir/docs/javadoc")
+        javadoc.title = "${project.name.toUpperCase()} API"
+
+        def options = javadoc.options
+
+        options.encoding = 'UTF-8'
+        options.addStringOption("sourcepath", "")
+        options.memberLevel = JavadocMemberLevel.PROTECTED
+
+        project.subprojects.each { proj ->
+            def javadocTask = proj.tasks.getByPath('javadoc')
+
+            if (javadocTask.enabled) {
+                javadoc.source += javadocTask.source
+                javadoc.classpath += javadocTask.classpath
             }
         }
     }
