@@ -89,7 +89,9 @@ class ExtDbTasksPlugin implements Plugin<Project> {
         }
 
         if (dbms.equals("mssql")) {
-            dbTask.dbmsVersion = project.property("test.db.dbmsVersion")
+            if (project.hasProperty("test.db.dbmsVersion")) {
+                dbTask.dbmsVersion = project.property("test.db.dbmsVersion")
+            }
         }
 
         if (dbms.equals("mysql")) {
