@@ -30,7 +30,7 @@ class ExtDbTasksPlugin implements Plugin<Project> {
         def testDbName = project.hasProperty("test.db.dbname") ? project.property("test.db.dbname") : createDb.dbName
         def testDbHost = project.hasProperty("test.db.host") ? project.property("test.db.host") : createDb.host
         if (testDbHost.contains(":")) {
-            hsqlPort = host.substring(testDbHost.lastIndexOf(":") + 1) as Integer
+            hsqlPort = testDbHost.substring(testDbHost.lastIndexOf(":") + 1) as Integer
         }
 
 
