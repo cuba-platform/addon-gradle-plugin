@@ -52,8 +52,8 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
 
     static def addDbArtifact(Project project, DbClassResolverExtension extension) {
         def dbms = project.hasProperty("test.db.dbms") ? project.property("test.db.dbms") : "hsql"
-        def driver = project.hasProperty("test.db.driver")?project.property("test.db.driver"):null
-        def dbmsVersion = project.hasProperty("test.db.dbmsVersion")?project.property("test.db.dbmsVersion"):null
+        def driver = project.hasProperty("test.db.driver") ? project.property("test.db.driver") : null
+        def dbmsVersion = project.hasProperty("test.db.dbmsVersion") ? project.property("test.db.dbmsVersion") : null
 
         Dependency dependency = extension.findProjectDBDependency(project, dbms, dbmsVersion, driver)
         def jdbcDependencies = project.getConfigurations().getByName("jdbc").dependencies
