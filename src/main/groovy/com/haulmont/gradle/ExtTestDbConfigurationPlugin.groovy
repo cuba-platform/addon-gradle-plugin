@@ -32,6 +32,7 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
 
     static def applyJvmArgs(Project project) {
         Task test = project.getTasks().findByName("test")
+        test.systemProperties.put("test.db.driverClassName", project.property("test.db.driver"))
         copyPropertyToSystem(test, project, "test.db.driver")
         copyPropertyToSystem(test, project, "test.db.username")
         copyPropertyToSystem(test, project, "test.db.url")
