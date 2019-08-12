@@ -3,6 +3,8 @@ package com.haulmont.gradle
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.internal.artifacts.dependencies.DefaultClientModule
+import org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency
+import org.gradle.api.internal.file.collections.ImmutableFileCollection
 
 public class DbClassResolverExtension {
 
@@ -34,9 +36,8 @@ public class DbClassResolverExtension {
                 }
                 break
             case "oracle":
-                //TODO oracle implementation
-                break
-
+                def driverClasspath = project.property("test.db.driverClasspath")
+                return new DefaultSelfResolvingDependency(ImmutableFileCollection.of(new File(driverClasspath)))
         }
         return null
     }
