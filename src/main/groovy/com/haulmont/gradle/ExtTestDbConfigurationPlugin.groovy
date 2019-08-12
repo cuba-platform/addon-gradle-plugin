@@ -7,13 +7,6 @@ import org.gradle.api.artifacts.Dependency
 
 class ExtTestDbConfigurationPlugin implements Plugin<Project> {
 
-    static def DB_LIB_GROUPS = ["org.hsqldb"             : "hsqldb",
-                                "org.mariadb.jdbc"       : "mariadb-java-client",
-                                "mysql"                  : "mysql-connector-java",
-                                "org.postgresql"         : "postgresql",
-                                "net.sourceforge.jtds"   : "jtds",
-                                "com.microsoft.sqlserver": "mssql-jdbc"]
-
     @Override
     void apply(Project project) {
         project.logger.info("[AddonPlugin] applying jdbc to project $project.name")

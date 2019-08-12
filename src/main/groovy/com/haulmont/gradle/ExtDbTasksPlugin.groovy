@@ -25,12 +25,15 @@ class ExtDbTasksPlugin implements Plugin<Project> {
     private void configureDbTasks(Project project) {
         def createDb = project.tasks.findByName("createDb")
         def dbName = createDb.dbName
-        def testDbName = createDb.dbName + "-test"
         def hsqlPort = DEFAULT_DB_PORT
-        def host = createDb.host
-        if (host.contains(":")) {
-            hsqlPort = host.substring(host.lastIndexOf(":") + 1) as Integer
+
+        def testDbName = project.hasProperty("test.db.dbname") ? project.property("test.db.dbname") : createDb.dbName
+        def testDbHost = project.hasProperty("test.db.host") ? project.property("test.db.host") : createDb.host
+        if (testDbHost.contains(":")) {
+            hsqlPort = host.substring(testDbHost.lastIndexOf(":") + 1) as Integer
         }
+
+
         if (!project.getTasks().findByName("startDb")) {
             def startDb = project.task([type: Class.forName('com.haulmont.gradle.task.db.CubaHsqlStart')], "startDb")
             startDb.dbName = dbName
