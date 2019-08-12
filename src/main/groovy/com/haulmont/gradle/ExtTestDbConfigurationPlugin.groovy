@@ -58,6 +58,7 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
         def jdbcDependencies = project.getConfigurations().getByName("jdbc").dependencies
         def testRuntimeDependencies = project.getConfigurations().getByName("testRuntime").dependencies
 
+        project.logger.info("[AddonPlugin] Apply jdbc artifact $dependency.group:$dependency.name:$dependency.version")
         jdbcDependencies.add(dependency);
         testRuntimeDependencies.add(dependency);
 
@@ -72,6 +73,8 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
         Dependency dependency = extension.findProjectDBDependency(project, dbms, dbmsVersion, driver)
         def jdbcDependencies = project.getConfigurations().getByName("jdbc").dependencies
         def testRuntimeDependencies = project.getConfigurations().getByName("testRuntime").dependencies
+
+        project.logger.info("[AddonPlugin] Excluding default jdbc artifact $dependency.group:$dependency.name:$dependency.version")
 
         jdbcDependencies.remove(jdbcDependencies.find { it ->
             return it.group == dependency.group && it.name == dependency.name
