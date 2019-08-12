@@ -32,7 +32,7 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
 
     static def applyJvmArgs(Project project) {
         Task test = project.getTasks().findByName("test")
-        copyPropertyToSystem(test, project, "test.db.driverClassName")
+        copyPropertyToSystem(test, project, "test.db.driver")
         copyPropertyToSystem(test, project, "test.db.username")
         copyPropertyToSystem(test, project, "test.db.url")
         copyPropertyToSystem(test, project, "test.db.password")
@@ -51,7 +51,7 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
 
     static def addDbArtifact(Project project, DbClassResolverExtension extension) {
         def dbms = project.hasProperty("test.db.dbms") ? project.property("test.db.dbms") : "hsql"
-        def driver = project.hasProperty("test.db.driverClassName")?project.property("test.db.driverClassName"):null
+        def driver = project.hasProperty("test.db.driver")?project.property("test.db.driver"):null
         def dbmsVersion = project.hasProperty("test.db.dbmsVersion")?project.property("test.db.dbmsVersion"):null
 
         Dependency dependency = extension.findProjectDBDependency(project, dbms, dbmsVersion, driver)

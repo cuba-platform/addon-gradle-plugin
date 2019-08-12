@@ -92,11 +92,11 @@ class ExtDbTasksPlugin implements Plugin<Project> {
         if (dbms.equals("mysql")) {
             dbTask.connectionParams = project.property("test.db.connectionParams")
             if (project.hasProperty("test.db.driver")) {
-                def driver = project.property("test.db.dbUrl")
+                def driver = project.property("test.db.url")
                 dbTask.driver = driver
                 if (driver.equals("org.mariadb.jdbc.Driver")) {
                     dbTask.masterUrl = project.property("test.db.masterUrl")
-                    dbTask.dbUrl = project.property("test.db.dbUrl")
+                    dbTask.dbUrl = project.property("test.db.url")
                 }
             }
         }
