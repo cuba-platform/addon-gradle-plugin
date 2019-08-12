@@ -31,7 +31,7 @@ class ExtTestDbConfigurationPlugin implements Plugin<Project> {
         copyPropertyToSystem(test, project, "test.db.username")
         copyPropertyToSystem(test, project, "test.db.url")
         copyPropertyToSystem(test, project, "test.db.password")
-        copyPropertyToSystem(test, project, "test.db.dbmsType")
+        copyPropertyToSystem(test, project, "test.db.dbms")
     }
 
     private static void copyPropertyToSystem(Task test, Project project, String name) {
