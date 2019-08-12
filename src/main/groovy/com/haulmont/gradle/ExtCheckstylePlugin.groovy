@@ -6,6 +6,7 @@ import org.gradle.api.Project
 
 class ExtCheckstylePlugin implements Plugin<Project> {
     void apply(Project p) {
+        p.logger.info("[AddonPlugin] applying checkstyle project $p.name")
         p.apply plugin: 'checkstyle'
         extend(p)
     }

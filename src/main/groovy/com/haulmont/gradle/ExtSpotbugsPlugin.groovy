@@ -9,6 +9,7 @@ import org.gradle.api.Task
 class ExtSpotbugsPlugin implements Plugin<Project> {
     void apply(Project p) {
         if (javaSourcesExists(p)) {
+            p.logger.info("[AddonPlugin] applying spotbugs to project $p.name")
             p.apply plugin: 'com.github.spotbugs'
             extend(p)
         }
@@ -16,7 +17,7 @@ class ExtSpotbugsPlugin implements Plugin<Project> {
 
     def extend(Project project) {
         def spotbugs = project.extensions.findByName('spotbugs')
-        spotbugs.toolVersion = "3.1.12"
+        spotbugs.toolVersion = "4.0.0-beta3"
         spotbugs.ignoreFailures = false
         spotbugs.omitVisitors = ['FindDoubleCheck']
         spotbugs.effort = "max"

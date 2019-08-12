@@ -2,7 +2,7 @@
 
 [![license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-CUBA Addon Gradle Plugin is optional gradle plugin which provides configured checkstyle and findbugs plugins
+CUBA Addon Gradle Plugin is optional gradle plugin which provides configured checkstyle, javadoc and spotbugs plugins
 
 ## Build and install
 

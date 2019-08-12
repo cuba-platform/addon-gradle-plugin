@@ -7,6 +7,7 @@ import org.gradle.api.Task
 
 class ExtFindbugsPlugin implements Plugin<Project> {
     void apply(Project p) {
+        p.logger.info("[AddonPlugin] applying findbugs to project $p.name")
         p.apply plugin: 'findbugs'
         extend(p)
     }

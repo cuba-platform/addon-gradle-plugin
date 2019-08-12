@@ -1,5 +1,4 @@
 buildscript {
-    ext.cubaVersion = '7.0-SNAPSHOT'
     repositories {
         if (System.getenv('HAULMONT_REPOSITORY_URL')) {
             maven {
@@ -28,7 +27,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.8"
 }
 
-def defaultVersion = '1.0-SNAPSHOT'
+def defaultVersion = '1.1-SNAPSHOT'
 def BUILD_VERSION = 'buildVersion'
 
 def artifactVersion = rootProject.hasProperty(BUILD_VERSION) ? rootProject[BUILD_VERSION] : defaultVersion
