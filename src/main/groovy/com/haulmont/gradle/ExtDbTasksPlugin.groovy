@@ -83,7 +83,7 @@ class ExtDbTasksPlugin implements Plugin<Project> {
         dbTask.dbUser = project.hasProperty("test.db.username") ? project.property("test.db.username") : createDb.dbUser
         dbTask.dbPassword = project.hasProperty("test.db.password") ? project.property("test.db.password") : createDb.dbPassword
 
-        if (dbms.equals("oracle")) {
+        if (dbms.equals("oracle") && dbTask.name == "createTestDb") {
             dbTask.oracleSystemUser = project.property("test.db.oracleSystemUser")
             dbTask.oracleSystemPassword = project.property("test.db.oracleSystemPassword")
         }
