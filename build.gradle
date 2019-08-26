@@ -62,6 +62,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
     compile group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.8'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     implementation gradleApi()
     implementation localGroovy()
 }

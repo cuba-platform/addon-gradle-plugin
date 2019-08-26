@@ -59,13 +59,17 @@ class ExtDbTasksPlugin implements Plugin<Project> {
             killProcess.port = hsqlPort
         }
         if (project.hasProperty("testMode")) {
+            def assembleDbScripts = project.getTasks().findByName("assembleDbScripts");
             if (!project.getTasks().findByName("createTestDb")) {
-                def assembleDbScripts = project.getTasks().findByName("assembleDbScripts");
                 def createTestDb = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: Class.forName('CubaDbCreation')], "createTestDb")
                 fillDbTaskValues(project, createTestDb)
+                if (!project.getTasks().findByName("createTestDbIfNotExists")) {
+                    CheckDBExistsTask createDbIfNotExists = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: CheckDBExistsTask], "createTestDbIfNotExists")
+                    createDbIfNotExists.createDBTask = createTestDb;
+                }
             }
+
             if (!project.getTasks().findByName("updateTestDb")) {
-                def assembleDbScripts = project.getTasks().findByName("assembleDbScripts");
                 def updateTestDb = project.task([dependsOn: assembleDbScripts, description: 'Updates local test database', type: Class.forName('CubaDbUpdate')], "updateTestDb")
                 fillDbTaskValues(project, updateTestDb)
             }
