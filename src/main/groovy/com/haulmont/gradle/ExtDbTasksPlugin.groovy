@@ -1,5 +1,6 @@
 package com.haulmont.gradle
 
+import org.apache.commons.lang3.StringUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -60,13 +61,30 @@ class ExtDbTasksPlugin implements Plugin<Project> {
         }
         if (project.hasProperty("testMode")) {
             def assembleDbScripts = project.getTasks().findByName("assembleDbScripts");
-            if (!project.getTasks().findByName("createTestDb")) {
-                def createTestDb = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: Class.forName('CubaDbCreation')], "createTestDb")
+
+            def createTestDb = project.getTasks().findByName("createTestDb");
+            if (createTestDb == null) {
+                createTestDb = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: Class.forName('CubaDbCreation')], "createTestDb")
                 fillDbTaskValues(project, createTestDb)
-                if (!project.getTasks().findByName("createTestDbIfNotExists")) {
-                    CheckDBExistsTask createDbIfNotExists = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: CheckDBExistsTask], "createTestDbIfNotExists")
-                    createDbIfNotExists.createDBTask = createTestDb;
+            } else {
+                if (project.hasProperty("test.db.dbms")) {
+                    def dbms = project.property("test.db.dbms")
+                    fillDbTaskValues(project, createTestDb)
+                    if (createTestDb.auxiliaryScript != null) {
+                        File auxiliaryScriptFile = createTestDb.auxiliaryScript
+                        String path = auxiliaryScriptFile.path
+                        String newPath = StringUtils.substringBeforeLast(path,".")+"_"+dbms+"."+StringUtils.substringAfterLast(path,".")
+                        File newScriptFile = new File(newPath)
+                        if (newScriptFile.exists()){
+                            createTestDb.auxiliaryScript = newScriptFile
+                        }
+                    }
                 }
+            }
+
+            if (!project.getTasks().findByName("createTestDbIfNotExists")) {
+                CheckDBExistsTask createDbIfNotExists = project.task([dependsOn: assembleDbScripts, description: 'Creates local test database', type: CheckDBExistsTask], "createTestDbIfNotExists")
+                createDbIfNotExists.createDBTask = createTestDb;
             }
 
             if (!project.getTasks().findByName("updateTestDb")) {
