@@ -77,6 +77,8 @@ class ExtDbTasksPlugin implements Plugin<Project> {
                         File newScriptFile = new File(newPath)
                         if (newScriptFile.exists()){
                             createTestDb.auxiliaryScript = newScriptFile
+                        } else {
+                            project.logger.info("[createTestDb] auxiliaryScript "+newPath+ " not found. Default script will be used")
                         }
                     }
                 }
