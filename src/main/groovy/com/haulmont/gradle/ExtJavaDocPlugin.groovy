@@ -11,17 +11,17 @@ class ExtJavaDocPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.logger.info("[AddonPlugin] applying javadoc to project $project.name")
         project.afterEvaluate { Project p ->
-            if (project != project.rootProject) {
-                if (!project.getTasks().findByName("javadoc")) {
-                    def javadoc = project.task("javadoc")
-                    javadoc.options.addStringOption("sourcepath", "")
+            if (p == project.rootProject) {
+                p.subprojects { Project sp ->
+                    if (!project.getTasks().findByName("javadoc")) {
+                        project.task("javadoc")
+                    }
                 }
-            } else {
-                if (!project.getTasks().findByName("aggregateJavadoc")) {
-                    def javadoc = project.task([type       : Javadoc,
-                                                description: 'Generate javadocs from all child projects as if it was a single project',
-                                                group      : 'Documentation'], "aggregateJavadoc")
-                    configureJavaDoc(project, javadoc)
+                if (!p.getTasks().findByName("aggregateJavadoc")) {
+                    def javadoc = p.task([type       : Javadoc,
+                                          description: 'Generate javadocs from all child projects as if it was a single project',
+                                          group      : 'Documentation'], "aggregateJavadoc")
+                    configureJavaDoc(p, javadoc)
                 }
             }
         }
